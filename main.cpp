@@ -41,10 +41,8 @@ int main()
                 finTable.open(fileName.c_str()); // Opens first table file for input
                 spellsTable.SetTableName(tableName); // Sets name of the first table
 
-                finTable >> parseHelp; // First gets the key
+                getline(finTable, parseHelp);
                 spellsTable.SetKey(parseHelp); // Sets the key for the table
-
-                finTable.ignore();
                 getline(finTable, parseHelp); // Skip the 2nd line as we already know scheme
 
                 while (!finTable.eof()) {
@@ -59,14 +57,11 @@ int main()
                 finTable.open(fileName.c_str()); // Opens second table file for input
                 itemsTable.SetTableName(tableName); // Sets name of the second table
 
-                finTable >> parseHelp; // First gets the key
-
-                finTable.ignore();
+                getline(finTable, parseHelp);
                 getline(finTable, parseHelp); // Skip the 2nd line as we already know scheme
 
-                while(!finTable.eof())
+                while(getline(finTable, parseHelp))
                 {
-                    getline(finTable, parseHelp); // Gets each line of items
                     istringstream declassify(parseHelp); // Used to get rid of '|' from parseHelp
                     itemsTable.InsertData(declassify);
                 }
@@ -77,14 +72,11 @@ int main()
                 finTable.open(fileName.c_str()); // Opens third table file for input
                 charTable.SetTableName(tableName); // Sets name of the third table
 
-                finTable >> parseHelp; // First gets the key
-
-                finTable.ignore();
+                getline(finTable, parseHelp); // Skip the 2nd line as we already know scheme
                 getline(finTable, parseHelp); // Skip the 2nd line as we already know scheme
 
-                while(!finTable.eof())
+                while(getline(finTable, parseHelp))
                 {
-                    getline(finTable, parseHelp); // Gets each line of items
                     istringstream declassify(parseHelp); // Used to get rid of '|' from parseHelp
                     charTable.InsertData(declassify);
                 }

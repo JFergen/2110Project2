@@ -3,8 +3,10 @@
 //
 
 #include "Table2.h"
+#include "LinkedList2.h"
 
 int ITEMSIZE = 10; // Global int for the size of the hash table
+LinkedList2 secIndexItem; // Secondary Index
 
 int HashModulo(int key); // Regular modulo hashing function
 
@@ -58,7 +60,7 @@ void Table2::SetSchemeData(istringstream& dataHelp) // Sets the data for the str
     }
 }
 
-void Table2::InsertData(istringstream& dataHelp)
+void Table2::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
 {
     string data;
     int pos = 0;
@@ -66,12 +68,9 @@ void Table2::InsertData(istringstream& dataHelp)
 
     getline(dataHelp, data, '|');
 
-    if(data.length() != 0) // Making sure stoi does not throw any bad exceptions
-    {
-        int keyData = stoi(data);
-        SetKey(keyData);
-        SetItemID(keyData);
-    }
+    int keyData = stoi(data);
+    SetKey(keyData);
+    SetItemID(keyData);
 
     SetSchemeData(dataHelp);
 
@@ -82,6 +81,7 @@ void Table2::InsertData(istringstream& dataHelp)
         if(IsEmpty(pos)) // Checks to see if it is empty using function
         {
             hashTableItem.at(pos) = dataEntry;
+            secIndexItem.Insert(dataEntry);
             break;
         }
         probed++; // Collision

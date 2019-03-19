@@ -3,8 +3,10 @@
 //
 
 #include "Table1.h"
+#include "LinkedList1.h"
 
 int SPELLSIZE = 10; // Global int for the size of the hash table
+LinkedList1 secIndexSpell; // Secondary Index
 
 int StringHash(string key); // String multiplicative hashing function
 
@@ -64,7 +66,7 @@ void Table1::SetSchemeData(istringstream& dataHelp) // Sets the data for the str
     }
 }
 
-void Table1::InsertData(istringstream& dataHelp)
+void Table1::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
 {
     string data;
     int pos = 0;
@@ -83,7 +85,8 @@ void Table1::InsertData(istringstream& dataHelp)
     {
         if(IsEmpty(pos)) // Checks to see if it is empty using function
         {
-            hashTableSpell.at(pos) = dataEntry; // Sets data into hash table
+            hashTableSpell.at(pos) = dataEntry; // Sets data into hash table (Primary Index)
+            //secIndexSpell.Insert(dataEntry); // Sets data into secondary index
             break;
         }
         pos = (pos + 1) % hashTableSpell.size(); // Moves position one up

@@ -3,8 +3,10 @@
 //
 
 #include "Table3.h"
+#include "LinkedList3.h"
 
 int CHARSIZE = 10; // Global int for the size of the hash table
+LinkedList3 secIndexCust;
 
 int MidSqHash(int key, int RCeil); // Hashing using Mid-Square Hash (base 10)
 int HashModulo2(int key); // Regular modulo hashing function
@@ -62,7 +64,7 @@ void Table3::SetSchemeData(istringstream& dataHelp) // Sets the data for the str
     }
 }
 
-void Table3::InsertData(istringstream& dataHelp)
+void Table3::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
 {
     string data;
     int pos = 0;
@@ -71,12 +73,9 @@ void Table3::InsertData(istringstream& dataHelp)
 
     getline(dataHelp, data, '|');
 
-    if(data.length() != 0) // Making sure stoi does not throw any bad exceptions
-    {
-        int keyData = stoi(data);
-        SetKey(keyData);
-        SetCharID(keyData);
-    }
+    int keyData = stoi(data);
+    SetKey(keyData);
+    SetCharID(keyData);
 
     SetSchemeData(dataHelp);
 
@@ -88,6 +87,7 @@ void Table3::InsertData(istringstream& dataHelp)
         if(IsEmpty(pos)) // Checks to see if it is empty using function
         {
             hashTableChar.at(pos) = dataEntry;
+            //secIndexCust.Insert(dataEntry);
             break;
         }
         probed++; // Collision
