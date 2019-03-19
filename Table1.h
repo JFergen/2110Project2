@@ -8,11 +8,13 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iomanip>
+#include <iostream>
 using namespace std;
 
 struct spellScheme
 {
-    string name;
+    string name = "";
     string level;
     string school;
     string castTime;
@@ -24,18 +26,20 @@ struct spellScheme
 class Table1
 {
 public:
-    Table1();
+    Table1(); // Constructor that sets everything to 0 and sets base size
     void SetTableName(string t);
-    void SetKey(string k);
+    void SetKey(string k); // Sets what is needed for the key
     void SetSpellName(string n);
-    void SetSchemeData(istringstream& dataHelp);
-    void InsertData(istringstream& dataHelp);
+    void SetSchemeData(istringstream& dataHelp); // Using a string stream of '|' delimited items, inputs data into struct
+    void InsertData(istringstream& dataHelp); // Inserts the data into the hash table
+    bool IsEmpty(int p); // Checks if the value in hash table is empty (can be empty from start or removed)
+    void DisplaySpells();
     string GetTableName();
 private:
     string tableName; // Name of the table (spells)
     string key;
-    spellScheme dataEntry;
-    vector<spellScheme> hashTableSpell;
+    spellScheme dataEntry; // Data that goes into hash table
+    vector<spellScheme> hashTableSpell; // Hash table
 };
 
 #endif //INC_2110PROJECT2_TABLE1_H

@@ -6,8 +6,7 @@
 
 int SPELLSIZE = 10; // Global int for the size of the hash table
 
-int StringHash(string key);
-bool IsEmpty(int p); // TODO: If I am removing something I need to set the name to "removed"
+int StringHash(string key); // String multiplicative hashing function
 
 Table1::Table1()
 {
@@ -68,35 +67,37 @@ void Table1::SetSchemeData(istringstream& dataHelp) // Sets the data for the str
 void Table1::InsertData(istringstream& dataHelp)
 {
     string data;
-    int pos;
+    int pos = 0;
     int probed = 0;
 
     getline(dataHelp, data, '|');
 
     SetKey(data);
     SetSpellName(data);
+
     SetSchemeData(dataHelp);
 
-    pos = StringHash(key);
+    pos = StringHash(key); // Gets first position using string multiplicative hashing
 
-    while(probed < hashTableSpell.size())
+    while(probed < hashTableSpell.size()) // Continues until it goes through whole hash table (Linear Probing)
     {
         if(IsEmpty(pos)) // Checks to see if it is empty using function
+        {
+            hashTableSpell.at(pos) = dataEntry; // Sets data into hash table
+            break;
+        }
+        pos = (pos + 1) % hashTableSpell.size(); // Moves position one up
         probed++;
 
-        if(probed == hashTableSpell.size())
+        if(probed == hashTableSpell.size()) //TODO If size is increased, must rehash everything
         {
             SPELLSIZE = (SPELLSIZE*2);
+            break;
         }
     }
 }
 
-string Table1::GetTableName()
-{
-    return tableName;
-}
-
-int StringHash(string key)
+int StringHash(string key) // String multiplicative hashing
 {
     int pos = 0;
     int mult = 2;
@@ -109,7 +110,36 @@ int StringHash(string key)
     return (pos % SPELLSIZE);
 }
 
-bool IsEmpty(int p) // TODO
+bool Table1::IsEmpty(int p)
 {
+    if(hashTableSpell.at(p).name == "removed" || hashTableSpell.at(p).name == "")
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
+void Table1::DisplaySpells()
+{
+    cout << setw(17) << "NAME" << setw(6) << "LEVEL" << setw(14) << "SCHOOL" << setw(13) << "CASTING_TIME" << setw(9)
+    << "RANGE" << setw(54) << "COMPONENTS" << setw(32) << "DURATION" << endl;
+
+    for(int i = 0; i < hashTableSpell.size(); i++)
+    {
+        if(!IsEmpty(i))
+        {
+            cout << setw(17) << hashTableSpell.at(i).name << setw(6) << hashTableSpell.at(i).level << setw(14)
+            << hashTableSpell.at(i).school << setw(13) << hashTableSpell.at(i).castTime << setw(9)
+            << hashTableSpell.at(i).range << setw(54) << hashTableSpell.at(i).components << setw(32)
+            << hashTableSpell.at(i).duration << endl;
+        }
+    }
+}
+
+string Table1::GetTableName()
+{
+    return tableName;
 }
