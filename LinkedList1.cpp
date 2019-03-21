@@ -7,34 +7,42 @@
 LinkedList1::LinkedList1()
 {
     head = nullptr;
-    tail = nullptr;
 }
 
-void LinkedList1::Insert(spellScheme info)
+void LinkedList1::Insert(spellScheme &info)
 {
-    node *tmp = new node;
-    tmp->data = info;
-    tmp->next = nullptr;
+    node* tmp = new node;
 
     if(head == nullptr)
     {
+        tmp->data = &info;
+
         head = tmp;
-        tail = tmp;
+        tmp->next = nullptr;
     }
     else
     {
-        tail->next = tmp;
-        tail = tail->next;
+        tmp->data = &info;
+        tmp->next = nullptr;
+        node* it;
+
+        it = head;
+
+        while(it->next != nullptr)
+        {
+            it = it->next;
+        }
+        it->next = tmp;
     }
 }
 
-bool LinkedList1::Delete(string k)
+bool LinkedList1::Delete(string k) //TODO
 {
     node *curr;
     node *prev;
     prev = curr = head;
 
-    while(curr != nullptr && curr->key != k)
+    while(curr != nullptr) //&& curr->key != k)
     {
         prev = curr;
         curr = curr->next;
@@ -55,7 +63,7 @@ bool LinkedList1::Delete(string k)
         prev->next = curr->next;
         if(curr->next == nullptr)
         {
-            tail = prev;
+            //tail = prev;
         }
         delete(curr);
 

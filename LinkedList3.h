@@ -8,19 +8,17 @@
 
 struct node
 {
-    charScheme data;
+    charScheme* data; // Needs to point
     node* next;
-    int key = data.ID;
 };
 
 class LinkedList3
 {
 private:
     node* head;
-    node* tail;
 public:
     LinkedList3();
-    void Insert(charScheme info);
+    void Insert(charScheme &info);
     bool Delete(int k);
 };
 #endif //INC_2110PROJECT2_LINKEDLIST3_H

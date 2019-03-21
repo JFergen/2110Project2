@@ -5,7 +5,7 @@
 #include "Table3.h"
 #include "LinkedList3.h"
 
-int CHARSIZE = 10; // Global int for the size of the hash table
+int CHARSIZE = 500; // Global int for the size of the hash table
 LinkedList3 secIndexCust;
 
 int MidSqHash(int key, int RCeil); // Hashing using Mid-Square Hash (base 10)
@@ -64,7 +64,7 @@ void Table3::SetSchemeData(istringstream& dataHelp) // Sets the data for the str
     }
 }
 
-void Table3::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
+void Table3::InsertData(istringstream& dataHelp)
 {
     string data;
     int pos = 0;
@@ -80,26 +80,20 @@ void Table3::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
     SetSchemeData(dataHelp);
 
     R = ceil(log10(CHARSIZE));
-    pos = HashModulo2(key);//MidSqHash(key, R); // Getting position using Mid-Square Hashing TODO
+    pos = MidSqHash(key, R); // Getting position using Mid-Square Hashing
 
-    while(probed < hashTableChar.size()) // Double Hashing
+    while(probed < hashTableChar.size()) // Double Hashing using Mid-Square and Modulo Hashing
     {
         if(IsEmpty(pos)) // Checks to see if it is empty using function
         {
             hashTableChar.at(pos) = dataEntry;
-            //secIndexCust.Insert(dataEntry);
+            secIndexCust.Insert(dataEntry);
             break;
         }
         probed++; // Collision
 
-        pos = (pos + 1) % hashTableChar.size();//((MidSqHash(key) + (HashModulo(key) * probed)) % hashTableChar.size());
-
-        if(probed == hashTableChar.size()) //TODO If size is increased, must rehash everything
-        {
-            CHARSIZE = (CHARSIZE*2);
-            break;
+        pos = ((MidSqHash(key, R) + (HashModulo2(key) * probed)) % hashTableChar.size());
         }
-    }
 }
 
 
@@ -136,11 +130,13 @@ string Table3::GetTableName()
     return tableName;
 }
 
-int MidSqHash(int key, int RCeil) // TODO
+int MidSqHash(int key, int RCeil)
 {
     int pos = key^2;
-  //  string spos = static_cast<string>(pos);
-  return -1;
+    string spos = to_string(pos);
+    string mpos = spos.substr(floor(spos.size()/2), RCeil);
+
+  return (stoi(mpos) % CHARSIZE);
 }
 
 int HashModulo2(int key)

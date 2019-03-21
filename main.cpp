@@ -85,8 +85,6 @@ int main()
 
     }
 
-    finMain.ignore();
-
     // Reads in the functions from input file and does necessary actions
     while(finMain.get(firstLetter))
     {
@@ -124,7 +122,7 @@ void CheckFunc(char c)
     }
 }
 
-int WhichTable(string t)
+int WhichTable(const string t)
 {
     if(t == "spells")
     {

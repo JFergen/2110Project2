@@ -8,19 +8,17 @@
 
 struct node
 {
-    itemScheme data;
+    itemScheme* data;
     node* next;
-    int key = data.ID;
 };
 
 class LinkedList2
 {
 private:
     node* head;
-    node* tail;
 public:
     LinkedList2();
-    void Insert(itemScheme info);
+    void Insert(itemScheme &info);
     bool Delete(int k);
 };
 

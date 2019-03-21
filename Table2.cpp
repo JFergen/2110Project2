@@ -5,7 +5,7 @@
 #include "Table2.h"
 #include "LinkedList2.h"
 
-int ITEMSIZE = 10; // Global int for the size of the hash table
+int ITEMSIZE = 500; // Global int for the size of the hash table
 LinkedList2 secIndexItem; // Secondary Index
 
 int HashModulo(int key); // Regular modulo hashing function
@@ -60,7 +60,7 @@ void Table2::SetSchemeData(istringstream& dataHelp) // Sets the data for the str
     }
 }
 
-void Table2::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
+void Table2::InsertData(istringstream& dataHelp)
 {
     string data;
     int pos = 0;
@@ -86,13 +86,7 @@ void Table2::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
         }
         probed++; // Collision
 
-        pos = ((HashModulo(key) + (1 * probed) + 1 * (probed * probed)) % hashTableItem.size());
-
-        if(probed == hashTableItem.size()) //TODO If size is increased, must rehash everything
-        {
-            ITEMSIZE = (ITEMSIZE*2);
-            break;
-        }
+        pos = ((HashModulo(key) + (2 * probed) + 3 * (probed * probed)) % hashTableItem.size());
     }
 }
 

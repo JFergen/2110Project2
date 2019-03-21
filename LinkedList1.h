@@ -8,19 +8,17 @@
 
 struct node
 {
-    spellScheme data;
+    spellScheme* data;
     node* next;
-    string key = data.name;
 };
 
 class LinkedList1
 {
 private:
     node* head;
-    node* tail;
 public:
     LinkedList1();
-    void Insert(spellScheme info);
+    void Insert(spellScheme &info);
     bool Delete(string k);
 };
 

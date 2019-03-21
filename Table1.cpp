@@ -5,7 +5,7 @@
 #include "Table1.h"
 #include "LinkedList1.h"
 
-int SPELLSIZE = 10; // Global int for the size of the hash table
+int SPELLSIZE = 500; // Global int for the size of the hash table
 LinkedList1 secIndexSpell; // Secondary Index
 
 int StringHash(string key); // String multiplicative hashing function
@@ -66,7 +66,7 @@ void Table1::SetSchemeData(istringstream& dataHelp) // Sets the data for the str
     }
 }
 
-void Table1::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
+void Table1::InsertData(istringstream& dataHelp)
 {
     string data;
     int pos = 0;
@@ -81,24 +81,19 @@ void Table1::InsertData(istringstream& dataHelp) //TODO Secondary INDEX
 
     pos = StringHash(key); // Gets first position using string multiplicative hashing
 
-    while(probed < hashTableSpell.size()) // Continues until it goes through whole hash table (Linear Probing)
+    while (probed < hashTableSpell.size()) // Continues until it goes through whole hash table (Linear Probing)
     {
-        if(IsEmpty(pos)) // Checks to see if it is empty using function
+        if (IsEmpty(pos)) // Checks to see if it is empty using function
         {
             hashTableSpell.at(pos) = dataEntry; // Sets data into hash table (Primary Index)
-            //secIndexSpell.Insert(dataEntry); // Sets data into secondary index
+            secIndexSpell.Insert(dataEntry); // Sets data into secondary index
             break;
         }
         pos = (pos + 1) % hashTableSpell.size(); // Moves position one up
         probed++;
-
-        if(probed == hashTableSpell.size()) //TODO If size is increased, must rehash everything
-        {
-            SPELLSIZE = (SPELLSIZE*2);
-            break;
-        }
     }
 }
+
 
 int StringHash(string key) // String multiplicative hashing
 {
