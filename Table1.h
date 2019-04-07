@@ -10,6 +10,8 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <list>
+#include <fstream>
 using namespace std;
 
 struct spellScheme
@@ -31,7 +33,11 @@ public:
     void SetKey(string k); // Sets what is needed for the key
     void SetSpellName(string n);
     void SetSchemeData(istringstream& dataHelp); // Using a string stream of '|' delimited items, inputs data into struct
-    void InsertData(istringstream& dataHelp); // Inserts the data into the hash table
+    bool InsertData(istringstream& dataHelp); // Inserts the data into the hash table
+    bool UpdateData(istringstream& dataHelp); // Updates the data in the hash table
+    void SelectData(istringstream& dataHelp); // Selects and returns data if found
+    void DeleteData(istringstream& dataHelp); // Selects and returns data if found
+    void WriteData(); // Writes out the data to an output file
     bool IsEmpty(int p); // Checks if the value in hash table is empty (can be empty from start or removed)
     void DisplaySpells();
     string GetTableName();

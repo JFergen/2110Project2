@@ -11,6 +11,8 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <list>
+#include <fstream>
 using namespace std;
 
 struct itemScheme
@@ -30,7 +32,11 @@ public:
     void SetKey(int k);
     void SetItemID(int ID);
     void SetSchemeData(istringstream& dataHelp);
-    void InsertData(istringstream& dataHelp);
+    bool InsertData(istringstream& dataHelp);
+    bool UpdateData(istringstream& dataHelp); // Updates the data in the hash table
+    void SelectData(istringstream& dataHelp); // Selects and returns data if found
+    void DeleteData(istringstream& dataHelp); // Selects and returns data if found
+    void WriteData(); // Writes out the data to an output file
     bool IsEmpty(int p);
     void DisplayItems();
     string GetTableName();

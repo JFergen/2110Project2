@@ -1,11 +1,15 @@
 #include "Table1.h"
 #include "Table2.h"
 #include "Table3.h"
-#include <fstream>
 
 void Display(); // Displays all of the tables
-void CheckFunc(char c); // Used to check which function to use from input file
-int WhichTable(const string t); // Used to decide which table to insert data to
+void Insert(const string &data, const string &table); // Inserts data into correct tables
+void Update(const string &data, const string &table); // Updates data in correct tables
+void Select(const string &data, const string &table); // Selects and returns data if found
+void Delete(const string &data, const string &table); // Selects and deletes data if found
+void Write(); // Writes data to separate output files
+void CheckFunc(const string &func, const string &data = "", const string &tableName = ""); // Used to check which function to use from input file
+int WhichTable(const string &t); // Used to decide which table to insert data to
 
 Table1 spellsTable; // Global table for spells
 Table2 itemsTable; // Global table for items
@@ -45,8 +49,8 @@ int main()
                 spellsTable.SetKey(parseHelp); // Sets the key for the table
                 getline(finTable, parseHelp); // Skip the 2nd line as we already know scheme
 
-                while (!finTable.eof()) {
-                    getline(finTable, parseHelp); // Gets each line of spells
+                while (getline(finTable, parseHelp))
+                {
                     istringstream declassify(parseHelp); // Used to get rid of '|' from parseHelp
                     spellsTable.InsertData(declassify);
                 }
@@ -85,15 +89,44 @@ int main()
 
     }
 
+    finMain.ignore();
+
     // Reads in the functions from input file and does necessary actions
-    while(finMain.get(firstLetter))
+    while(getline(finMain, parseHelp))
     {
-        CheckFunc(firstLetter);
-        getline(finMain, parseHelp); // Skips to next line
+        istringstream goAway(parseHelp); // Used to get rid of (( and ))
+        string funcToDo;
+        string dataToStore;
+        string dataHelp;
+        string tableN;
+        char garbageChar;
+
+        while(getline(goAway, funcToDo, '(')) // Gets rid of first '('
+        {
+            goAway.get(garbageChar);
+
+            if(goAway.peek() == -1)//(garbageChar != ')') && (garbageChar != '\n'))
+            {
+                CheckFunc(funcToDo);
+            } else
+            {
+                getline(goAway, dataToStore, ')'); // Gets tuple of data
+
+                if(goAway.peek() != 44) // If there are more '(' in the data that need to be captured
+                {
+                    getline(goAway, dataHelp, ')');
+                    dataToStore += ")";
+                    dataToStore += dataHelp;
+                }
+                goAway.get(garbageChar); // Gets rid of ,
+                getline(goAway, tableN, ')'); // Gets table name
+                goAway.get(garbageChar);
+                CheckFunc(funcToDo, dataToStore, tableN);
+            }
+        }
     }
 
     finMain.close();
-
     return 0;
 }
 
@@ -109,20 +142,151 @@ void Display()
     cout << endl;
 }
 
-void CheckFunc(char c)
+void Insert(const string &data, const string &table)
 {
-    switch (c)
+    istringstream dataHelp(data);
+
+    if(table == "spells")
     {
-        case 'D':
-            Display();
-            break;
-            //TODO FOR OTHER FUNCTIONS
-        default:
-            break;
+        if(spellsTable.InsertData(dataHelp))
+        {
+            cout << "Inserted (" << data << ") into " << table << endl;
+        } else
+        {
+            cout << "Failed to insert (" << data << ") into " << table << endl;
+        }
+    }
+    else if(table == "items")
+    {
+        if(itemsTable.InsertData(dataHelp))
+        {
+            cout << "Inserted (" << data << ") into " << table << endl;
+        } else
+        {
+            cout << "Failed to insert (" << data << ") into " << table << endl;
+        }
+    }
+    else if(table == "customers")
+    {
+        if(charTable.InsertData(dataHelp))
+        {
+            cout << "Inserted (" << data << ") into " << table << endl;
+        } else
+        {
+            cout << "Failed to insert (" << data << ") into " << table << endl;
+        }
     }
 }
 
-int WhichTable(const string t)
+void Update(const string &data, const string &table)
+{
+    istringstream dataHelp(data);
+
+    if(table == "spells")
+    {
+        if(spellsTable.UpdateData(dataHelp))
+        {
+            cout << "Updated (" << data << ") in " << table << endl;
+        } else
+        {
+            cout << "Failed to update (" << data << ") into " << table << endl;
+        }
+    }
+    else if(table == "items")
+    {
+        if(itemsTable.UpdateData(dataHelp))
+        {
+            cout << "Updated (" << data << ") into " << table << endl;
+        } else
+        {
+            cout << "Failed to update (" << data << ") into " << table << endl;
+        }
+    }
+    else if(table == "customers")
+    {
+        if(charTable.UpdateData(dataHelp))
+        {
+            cout << "Updated (" << data << ") into " << table << endl;
+        } else
+        {
+            cout << "Failed to update (" << data << ") into " << table << endl;
+        }
+    }
+}
+
+void Select(const string &data, const string &table)
+{
+    istringstream dataHelp(data);
+
+    if(table == "spells")
+    {
+        spellsTable.SelectData(dataHelp);
+    }
+    else if(table == "items")
+    {
+        itemsTable.SelectData(dataHelp);
+    }
+    else if(table == "customers")
+    {
+        charTable.SelectData(dataHelp);
+    }
+}
+
+void Delete(const string &data, const string &table)
+{
+    istringstream dataHelp(data);
+
+    if(table == "spells")
+    {
+        spellsTable.DeleteData(dataHelp);
+    }
+    else if(table == "items")
+    {
+        itemsTable.DeleteData(dataHelp);
+    }
+    else if(table == "customers")
+    {
+        charTable.DeleteData(dataHelp);
+    }
+}
+
+void Write()
+{
+    spellsTable.WriteData();
+    itemsTable.WriteData();
+    charTable.WriteData();
+}
+
+void CheckFunc(const string &func, const string &data, const string &tableName)
+{
+    if(func == "DISPLAY")
+    {
+        cout << endl;
+        Display();
+    }
+    else if(func == "INSERT")
+    {
+        Insert(data, tableName);
+    }
+    else if(func == "UPDATE")
+    {
+        Update(data, tableName);
+    }
+    else if(func == "SELECT")
+    {
+        Select(data, tableName);
+    }
+    else if(func == "DELETE")
+    {
+        Delete(data, tableName);
+    }
+    else if(func == "WRITE")
+    {
+        Write();
+    }
+}
+
+int WhichTable(const string &t)
 {
     if(t == "spells")
     {
