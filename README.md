@@ -1,5 +1,4 @@
 CSCE 2110 Project 2
-Joseph Fergen
 
 1. Compile the program using: g++ *.cpp -std=c++11
 2. Run the program using: ./a.out
